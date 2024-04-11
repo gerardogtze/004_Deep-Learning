@@ -6,6 +6,7 @@ import dnn
 import rnn
 import os
 
+
 def create_dataset(file):
     df = pd.read_csv(file)
     df[f'T_Minus_1'] = df['Close'].shift(1)
