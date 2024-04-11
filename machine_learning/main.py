@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 import optuna
 import pickle
 import dnn
+import rnn
 import os
 
 def create_dataset(file):
@@ -39,14 +40,14 @@ for filename in os.listdir(folder_path):
         dataset = create_dataset(file_path)
         X_train, X_test, y_train, y_test = model_data(dataset, position)
         study = optuna.create_study(direction='maximize')
-        objective = dnn.objective_dnn_wrapper(X_train, X_test, y_train, y_test)
-        study.optimize(objective, n_trials=10)
+        objective = rnn.objective_rnn_wrapper(X_train, X_test, y_train, y_test)
+        study.optimize(objective, n_trials=1)
         best_score = study.best_value
-        accuracy, model = dnn.deep_neural_network(X_train, X_test, y_train, y_test, study.best_params)
+        accuracy, model = rnn.rnn_model(X_train, X_test, y_train, y_test, study.best_params)
         new_name = filename.replace(".csv","_" + position)
         results[new_name] = accuracy
-        model.save("machine_learning/models/" + new_name + ".keras")
+        model.save("machine_learning/models/" + "rnn_" + new_name + ".keras")
        
 
 for key, value in results.items():
-    print(f"Dataset: {key}, Accuracy: {value}")        
+    print(f"Dataset: {key}, Accuracy: {value}")     
